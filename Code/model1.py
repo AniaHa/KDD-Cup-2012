@@ -4,8 +4,14 @@ from tensorflow.python.client import device_lib
 from tensorflow import keras
 from tensorflow.keras.layers import Dense
 
-print("Num GPUs Available: ", len(tf.config.list_physical_devices('GPU')))
+#print("Num GPUs Available: ", len(tf.config.list_physical_devices('GPU')))
 device_lib.list_local_devices()
+
+
+def get_available_gpus():
+    local_device_protos = device_lib.list_local_devices()
+    return [x.name for x in local_device_protos if x.device_type == 'GPU']
+
 
 ds_train = tf.data.experimental.make_csv_dataset("D100k_1.tsv.gz",
                                                  field_delim = "\t",
@@ -14,7 +20,6 @@ ds_train = tf.data.experimental.make_csv_dataset("D100k_1.tsv.gz",
                                                  label_name = "Click",
                                                  shuffle = False,
                                                  num_epochs = 1
-
                                                  )
 
 columns = list(ds_train.element_spec[0].keys())
